@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>College Wishlist - Instant photo film galerie</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Caveat");
+
+    body {
+      margin: 0;
+      font-family: 'Caveat', serif;
+      overflow: hidden;
+      background: url('https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110986.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+  .zoom-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.7); /* Adjust scale value here */
+  transform-origin: center;
+}
+
+    .Container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+    }
+
+    .Picture {
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 5px solid #fff;
+      border-radius: 3px;
+      background: #fff;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      transform: translate(-50%, -50%);
+      user-select: none;
+      cursor: grab;
+    }
+
+    .Picture-img {
+      display: block;
+      width: 320px;
+      height: 400px;
+      pointer-events: none;
+    }
+
+    .yes-no-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, .3);
+      border-radius: 3px;
+    }
+
+    .yes-no-overlay p {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .yes-no-overlay button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .yes-btn {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .no-btn {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="zoom-container">
+    <div class="Container">
+      <!-- Yes/No Picture moved to the top -->
+      <div class="Picture">
+        <img class="Picture-img" src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111003.jpg" alt="" />
+        <!-- Yes/No Overlay -->
+        <div class="yes-no-overlay">
+          <p>PATTUMOOOOOOO..👀?</p>
+          <button class="yes-btn" onclick="sendMessage('KOZHAPAM ILLYA🙃🫠')">KOZHAPAM ILLYA🙃🫠</button>
+          <button class="no-btn" onclick="sendMessage('PATTULA😤🚶🏻‍♀️')">PATTULA😤🚶🏻‍♀️</button>
+        </div>
+      </div><div class="Picture">
+        <img class="Picture-img" src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111021.jpg" alt="" />
+      </div>
+<div class="Picture">
+        <img class="Picture-img" src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111018.jpg" alt="" />
+      </div>
+      <!-- Other Picture divs -->
+      <div class="Picture">
+        <img class="Picture-img" src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111016.jpg" alt="" />
+      </div>
+      <div class="Picture">
+        <img class="Picture-img" src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111012.jpg" alt="" />
+      </div>
+      <div class="Picture">
+        <img class="Picture-img" src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111009.jpg" alt="" />
+      </div>
+      <div class="Picture">
+        <img class="Picture-img" src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111014.jpg" alt="" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const pictures = document.querySelectorAll('.Picture');
+    const zoomContainer = document.querySelector('.zoom-container');
+    let previousTouch;
+    let zoomLevel = 1;
+
+    // Function to update element position
+    function updateElementPosition(element, event) {
+      let movementX, movementY;
+
+      if (event.type === 'touchmove') {
+        const touch = event.touches[0];
+        movementX = previousTouch ? touch.clientX - previousTouch.clientX : 0;
+        movementY = previousTouch ? touch.clientY - previousTouch.clientY : 0;
+        previousTouch = touch;
+      } else {
+        movementX = event.movementX;
+        movementY = event.movementY;
+      }
+
+      const elementY = parseInt(element.style.top || 0) + movementY;
+      const elementX = parseInt(element.style.left || 0) + movementX;
+
+      element.style.top = elementY + 'px';
+      element.style.left = elementX + 'px';
+    }
+
+    // Start dragging
+    function startDrag(element, event) {
+      const updateFunction = (event) => updateElementPosition(element, event);
+      const stopFunction = () => stopDrag(updateFunction, stopFunction);
+
+      document.addEventListener('mousemove', updateFunction);
+      document.addEventListener('touchmove', updateFunction);
+      document.addEventListener('mouseup', stopFunction);
+      document.addEventListener('touchend', stopFunction);
+    }
+
+    // Stop dragging
+    function stopDrag(updateFunction, stopFunction) {
+      previousTouch = undefined;
+      document.removeEventListener('mousemove', updateFunction);
+      document.removeEventListener('touchmove', updateFunction);
+      document.removeEventListener('mouseup', stopFunction);
+      document.removeEventListener('touchend', stopFunction);
+    }
+
+    // Initialize draggable pictures
+    pictures.forEach(picture => {
+      const range = 100;
+      const randomX = Math.random() * (range * 2) - range;
+      const randomY = Math.random() * (range * 2) - range;
+      const randomRotate = Math.random() * (range / 2) - range / 4;
+      picture.style.top = `${randomY}px`;
+      picture.style.left = `${randomX}px`;
+      picture.style.transform = `translate(-50%, -50%) rotate(${randomRotate}deg)`;
+
+      picture.addEventListener('mousedown', (event) => startDrag(picture, event));
+      picture.addEventListener('touchstart', (event) => {
+        previousTouch = event.touches[0];
+        startDrag(picture, event);
+      });
+    });
+
+    // Zoom functionality
+    function zoomIn() {
+      if (zoomLevel < 2) {
+        zoomLevel += 0.1;
+        zoomContainer.style.transform = `translate(-50%, -50%) scale(${zoomLevel})`;
+      }
+    }
+
+    function zoomOut() {
+      if (zoomLevel > 1) {
+        zoomLevel -= 0.1;
+        zoomContainer.style.transform = `translate(-50%, -50%) scale(${zoomLevel})`;
+      }
+    }
+
+    // Event listeners for zoom
+    document.addEventListener('keydown', (event) => {
+      if (event.key === '+') zoomIn();
+      if (event.key === '-') zoomOut();
+    });
+
+    // Send message function
+    function sendMessage(response) {
+      const email = "praveenpanangadan07@gmail.com";
+      const subject = ":)";
+      const body = `The user selected: ${response}`;
+      const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoLink;
+    }
+  </script>
+</body>
+</html>
